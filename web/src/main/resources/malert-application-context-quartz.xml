@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="emaiLAlertJob" class="com.sysquare.malert.web.scheduler.MailScheduerJob" />
+    <bean id="backupJob" class="com.sysquare.malert.web.scheduler.BackupScheduerJob" />
+    
+    <!-- create the Job -->
+    <bean id="emaiLAlertJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="emaiLAlertJob" />
+        <property name="targetMethod" value="execute" />
+    </bean>
+    <bean id="backupJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="backupJob" />
+        <property name="targetMethod" value="execute" />
+    </bean>
+    
+    <bean id="emailAlertCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="emaiLAlertJobDetail" />
+        <property name="misfireInstruction" value="1" /><!-- Means MISFIRE_INSTRUCTION_FIRE_ONCE_NOW -->
+        <!-- <property name="cronExpression" value="0/10 0 * ? * MON-FRI" /> -->
+        <property name="cronExpression" value="0 0 10,17 ? * MON-SAT *" /> <!-- Seconds Minutes Hours 'Day of month' Month 'Day of week' Year -->
+    </bean>
+    <bean id="backupCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="backupJobDetail" />
+        <property name="misfireInstruction" value="1" /><!-- Means MISFIRE_INSTRUCTION_FIRE_ONCE_NOW -->
+        <!-- <property name="cronExpression" value="0/10 0 * ? * MON-FRI" /> -->
+        <property name="cronExpression" value="0 * * * * ? *" /> <!-- Seconds Minutes Hours 'Day of month' Month 'Day of week' Year -->
+    </bean>
+ 	<!-- SchedulerFactoryBean -->
+    <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" scope="singleton">
+        <property name="triggers">
+            <list>
+                <ref bean="emailAlertCronTrigger" />
+                <ref bean="backupCronTrigger" />
+            </list>
+        </property>
+    </bean>
+    
+</beans>
