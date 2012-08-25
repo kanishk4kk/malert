@@ -1,0 +1,15 @@
+.project
+.settings/
+core/.classpath
+core/.project
+core/.settings/
+core/target/
+model/.classpath
+model/.project
+model/.settings/
+model/target/
+web/.classpath
+web/.project
+web/.settings/
+web/target/
+	
