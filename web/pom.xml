@@ -31,7 +31,7 @@
 				<configuration>
 					<warName>malert</warName>
 					<webappDirectory>
-						/home/pradeep/tomcats/apache-tomcat-6.0.26/webapps/malert
+						${env.CATALINA_HOME}/webapps/malert
 					</webappDirectory>
 				</configuration>
 			</plugin>
